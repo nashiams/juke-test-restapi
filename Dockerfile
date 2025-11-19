@@ -1,19 +1,19 @@
-FROM golang:1.21-alpine AS development
+FROM golang:1.23-alpine AS development
 
 WORKDIR /app
 
-# Install air for hot-reloading
-RUN go install github.com/cosmtrek/air@latest
+# Install air and swag
+RUN go install github.com/air-verse/air@v1.52.3 && \
+    go install github.com/swaggo/swag/cmd/swag@latest
 
-# Copy go mod files
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
 COPY . .
 
-# Expose port
+RUN swag init
+
 EXPOSE 8080
 
-# Run with air
+# Use air to watch and auto-reload
 CMD ["air", "-c", ".air.toml"]

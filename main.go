@@ -2,12 +2,18 @@ package main
 
 import (
 	"juke-test-restapi/db"
+	_ "juke-test-restapi/docs"
 	"juke-test-restapi/router"
 	"log"
 
 	"go.uber.org/zap"
 )
 
+// @title Employee Management API
+// @version 1.0
+// @description REST API for managing employee data
+// @host localhost:8080
+// @BasePath /api
 func main() {
 	// Initialize zap logger
 	logger, _ := zap.NewProduction()
@@ -18,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.DB.Close()
-
+	
 	r := router.SetupRouter()
 	r.Run(":8080")
 }

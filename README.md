@@ -56,6 +56,10 @@ src/
 | PUT    | /api/employees/{id} | Mengubah data karyawan         |
 | DELETE | /api/employees/{id} | Menghapus data karyawan        |
 
+## 📖 API Documentation
+
+Swagger UI tersedia di: **http://localhost:8080/swagger/index.html**
+
 ## ⚙️ Fungsi Tambahan (Opsional)
 
 - Validasi input (`@Valid`) seperti email wajib dan salary > 0.
@@ -79,6 +83,9 @@ docker-compose up --build
 
 # Atau jalankan di background
 docker-compose up -d --build
+
+# Akses Swagger UI
+# Buka browser: http://localhost:8080/swagger/index.html
 
 # Melihat logs
 docker-compose logs -f app

@@ -22,7 +22,7 @@ func Connect() error {
     host := os.Getenv("DB_HOST")
     port := os.Getenv("DB_PORT")
     user := os.Getenv("DB_USER")
-    pass := os.Getenv("DB_PASSWORD")
+    pass := os.Getenv("DB_PASS")
     name := os.Getenv("DB_NAME")
 
     // DSN

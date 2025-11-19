@@ -12,7 +12,6 @@ import (
 // @title Employee Management API
 // @version 1.0
 // @description REST API for managing employee data
-// @host localhost:8080
 // @BasePath /api
 func main() {
 	// Initialize zap logger

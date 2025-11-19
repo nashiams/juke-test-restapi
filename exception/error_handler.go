@@ -17,7 +17,7 @@ func (e *AppError) Error() string {
 
 // Predefined errors
 var (
-	ErrNotFound     = &AppError{Code: http.StatusNotFound, Message: "Resource not found"}
+	ErrNotFound     = &AppError{Code: http.StatusNotFound, Message: "Employee not found"}
 	ErrBadRequest   = &AppError{Code: http.StatusBadRequest, Message: "Bad request"}
 	ErrUnauthorized = &AppError{Code: http.StatusUnauthorized, Message: "Unauthorized"}
 	ErrInternal     = &AppError{Code: http.StatusInternalServerError, Message: "Internal server error"}

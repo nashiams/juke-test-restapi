@@ -6,8 +6,10 @@ import (
 	"juke-test-restapi/service"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
 )
 
@@ -63,7 +65,7 @@ func GetEmployeeByID(c *gin.Context) {
 func CreateEmployee(c *gin.Context) {
 	var req model.CreateEmployeeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		panic(exception.NewAppError(400, err.Error()))
+		panic(exception.NewAppError(400, formatValidationError(err)))
 	}
 	zap.L().Info("POST /api/employees", zap.String("email", req.Email))
 
@@ -94,7 +96,7 @@ func UpdateEmployee(c *gin.Context) {
 
 	var req model.UpdateEmployeeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		panic(exception.NewAppError(400, err.Error()))
+		panic(exception.NewAppError(400, formatValidationError(err)))
 	}
 	zap.L().Info("PUT /api/employees/:id", zap.Int64("id", id), zap.String("email", req.Email))
 
@@ -125,4 +127,21 @@ func DeleteEmployee(c *gin.Context) {
 		panic(err)
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Employee deleted successfully"})
+}
+
+func formatValidationError(err error) string {
+	if validationErrors, ok := err.(validator.ValidationErrors); ok {
+		for _, e := range validationErrors {
+			field := strings.ToLower(e.Field())
+			switch e.Tag() {
+			case "required":
+				return field + " is required"
+			case "email":
+				return "invalid email format"
+			case "gt":
+				return field + " must be greater than 0"
+			}
+		}
+	}
+	return err.Error()
 }

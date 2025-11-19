@@ -1,4 +1,190 @@
+basePath: /api
+definitions:
+  model.CreateEmployeeRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      position:
+        type: string
+      salary:
+        type: number
+    required:
+    - email
+    - name
+    - position
+    - salary
+    type: object
+  model.Employee:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      position:
+        type: string
+      salary:
+        type: number
+    type: object
+  model.UpdateEmployeeRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      position:
+        type: string
+      salary:
+        type: number
+    required:
+    - email
+    - name
+    - position
+    - salary
+    type: object
 info:
   contact: {}
-paths: {}
+  description: REST API for managing employee data
+  title: Employee Management API
+  version: "1.0"
+paths:
+  /employees:
+    get:
+      description: Get list of all employees
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/model.Employee'
+              type: array
+            type: object
+      summary: Get all employees
+      tags:
+      - employees
+    post:
+      consumes:
+      - application/json
+      description: Create a new employee record
+      parameters:
+      - description: Employee data
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateEmployeeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/model.Employee'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create new employee
+      tags:
+      - employees
+  /employees/{id}:
+    delete:
+      description: Delete employee by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete employee
+      tags:
+      - employees
+    get:
+      description: Get employee details by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/model.Employee'
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get employee by ID
+      tags:
+      - employees
+    put:
+      consumes:
+      - application/json
+      description: Update employee data by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Employee data
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateEmployeeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/model.Employee'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update employee
+      tags:
+      - employees
 swagger: "2.0"

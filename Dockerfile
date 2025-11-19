@@ -11,8 +11,6 @@ RUN go mod download
 
 COPY . .
 
-RUN swag init
-
 EXPOSE 8080
 
 # Use air to watch and auto-reload

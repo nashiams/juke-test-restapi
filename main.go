@@ -14,7 +14,7 @@ import (
 // @description REST API for managing employee data
 // @BasePath /api
 func main() {
-	// Initialize zap logger
+	
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 	zap.ReplaceGlobals(logger)

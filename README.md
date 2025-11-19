@@ -1,127 +1,227 @@
-# juke-test-restapi
+# Employee Management REST API (Golang)
 
-# Kandidat Developer Juke
+## Prasyarat
 
-- Membuat REST API berbasis **Java** + Spring Boot (MVC) | **Golang** boleh
-- Mengelola data CRUD sederhana
-- Menjalankan aplikasi di Docker
+- Docker Desktop
+- Docker Compose
 
-# 🧩 Employee Management REST API
+## Cara Menjalankan Project
 
-## 📘 Deskripsi Kasus
+### 1. Setup Environment
 
-Proyek ini adalah REST API sederhana untuk mengelola data karyawan di perusahaan **Juke**.
-Dapat dibuat menggunakan **Java + Spring Boot (MVC)** atau **Golang**, dan dijalankan di atas **Docker container** (nilai plus).
+Buat file `.env` di root project:
 
-## 🎯 Tujuan Utama
-
-- Membuat REST API sesuai prinsip MVC.
-- Melakukan operasi CRUD pada entity **Employee**.
-- Menjalankan aplikasi di Docker.
-- (Opsional): Menambahkan validasi, exception handling, dan dokumentasi Swagger.
-
-## 🧱 Spesifikasi Teknis
-
-**Bahasa & Framework:**
-
-- Java 17+ (Spring Boot) atau Golang
-
-**Struktur minimal (MVC):**
-
-```
-src/
- ├── controller/
- ├── service/
- ├── repository/
- └── model/
+```env
+DB_HOST=localhost
+DB_PORT=5433
+DB_USER=postgres
+DB_PASS=postgres
+DB_NAME=juke_test_db
 ```
 
-**Entity: Employee**
-| Field | Type | Keterangan |
-|--------|-------|------------|
-| id | Long | auto increment |
-| name | String | nama lengkap |
-| email | String | harus unik |
-| position | String | jabatan karyawan |
-| salary | Double | gaji karyawan |
-| createdAt | LocalDateTime | waktu data dibuat |
-
-## 🔌 Endpoint REST API
-
-| Method | Endpoint            | Deskripsi                      |
-| ------ | ------------------- | ------------------------------ |
-| GET    | /api/employees      | Menampilkan semua karyawan     |
-| GET    | /api/employees/{id} | Menampilkan detail 1 karyawan  |
-| POST   | /api/employees      | Menambahkan data karyawan baru |
-| PUT    | /api/employees/{id} | Mengubah data karyawan         |
-| DELETE | /api/employees/{id} | Menghapus data karyawan        |
-
-## 📖 API Documentation
-
-Swagger UI tersedia di: **http://localhost:8080/swagger/index.html**
-
-## ⚙️ Fungsi Tambahan (Opsional)
-
-- Validasi input (`@Valid`) seperti email wajib dan salary > 0.
-- Global error handling (`@ControllerAdvice`).
-- Dokumentasi API dengan Swagger (`springdoc-openapi-ui`).
-- Logging sederhana (`@Slf4j`).
-
-## 🐳 Deploy di Docker
-
-Aplikasi ini dijalankan menggunakan Docker dengan arsitektur multi-container:
-
-1. **Database (PostgreSQL)** - Menyimpan data karyawan
-2. **Migration Service** - Menjalankan migrasi database sekali saat startup
-3. **App Service** - Menjalankan REST API dengan hot-reload
-
-### Cara Menjalankan
+### 2. Jalankan Docker
 
 ```bash
-# Build dan jalankan semua services
 docker-compose up --build
-
-# Atau jalankan di background
-docker-compose up -d --build
-
-# Akses Swagger UI
-# Buka browser: http://localhost:8080/swagger/index.html
-
-# Melihat logs
-docker-compose logs -f app
-
-# Stop semua services
-docker-compose down
-
-# Stop dan hapus volumes (reset database)
-docker-compose down -v
 ```
 
-### Urutan Startup
+### 3. Akses API
 
-1. Database service dimulai dan health check
-2. Migration service menjalankan migrasi database
-3. App service dimulai setelah migrasi selesai
+- **Base URL:** `http://localhost:8080/api`
+- **Swagger UI:** `http://localhost:8080/swagger/index.html`
+
+## API Endpoints
+
+| Method | Endpoint           | Deskripsi                  |
+| ------ | ------------------ | -------------------------- |
+| GET    | /api/employees     | Mendapatkan semua karyawan |
+| GET    | /api/employees/:id | Mendapatkan karyawan by ID |
+| POST   | /api/employees     | Menambah karyawan baru     |
+| PUT    | /api/employees/:id | Mengupdate data karyawan   |
+| DELETE | /api/employees/:id | Menghapus karyawan         |
+
+## Contoh Request Body (Postman)
+
+### 1. GET All Employees
+
+```
+GET http://localhost:8080/api/employees
+```
+
+**Body:** Tidak perlu
+
+**Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "position": "Software Engineer",
+      "salary": 75000.0,
+      "created_at": "2025-11-19T10:15:30Z"
+    }
+  ]
+}
+```
 
 ---
 
-## 🧠 Penilaian (Total 100 poin)
+### 2. GET Employee by ID
 
-| Kriteria                                                | Bobot |
-| ------------------------------------------------------- | ----- |
-| Struktur kode rapi & sesuai MVC                         | 20    |
-| Endpoint CRUD berfungsi dengan benar                    | 30    |
-| Validasi input & error handling                         | 5     |
-| Dokumentasi Swagger                                     | 5     |
-| Dockerfile berfungsi (aplikasi bisa jalan di container) | 20    |
-| Bisa menjelaskan apa yang dibuat                        | 20    |
+```
+GET http://localhost:8080/api/employees/1
+```
 
-**Total: 100 poin**
+**Body:** Tidak perlu
+
+**Response:**
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "position": "Software Engineer",
+    "salary": 75000.0,
+    "created_at": "2025-11-19T10:15:30Z"
+  }
+}
+```
 
 ---
 
-## 📦 Output yang Diminta
+### 3. POST Create Employee
 
-- Source code project (GitHub repo)
-- File `Dockerfile` dan `docker-compose.yml`
-- Petunjuk cara menjalankan project di `README.md`
+```
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  "position": "Backend Developer",
+  "salary": 80000.5
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "id": 2,
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "position": "Backend Developer",
+    "salary": 80000.5,
+    "created_at": "2025-11-19T10:20:15Z"
+  }
+}
+```
+
+---
+
+### 4. PUT Update Employee
+
+```
+PUT http://localhost:8080/api/employees/2
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "name": "Alice Johnson Updated",
+  "email": "alice.updated@example.com",
+  "position": "Senior Backend Developer",
+  "salary": 95000.0
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "id": 2,
+    "name": "Alice Johnson Updated",
+    "email": "alice.updated@example.com",
+    "position": "Senior Backend Developer",
+    "salary": 95000.0,
+    "created_at": "2025-11-19T10:20:15Z"
+  }
+}
+```
+
+---
+
+### 5. DELETE Employee
+
+```
+DELETE http://localhost:8080/api/employees/2
+```
+
+**Body:** Tidak perlu
+
+**Response:**
+
+```json
+{
+  "message": "Employee deleted successfully"
+}
+```
+
+---
+
+## Contoh Error Response
+
+**404 Not Found:**
+
+```json
+{
+  "error": true,
+  "message": "Employee not found",
+  "code": 404
+}
+```
+
+**400 Bad Request (Validation):**
+
+```json
+{
+  "error": true,
+  "message": "email is required",
+  "code": 400
+}
+```
+
+**400 Duplicate Email:**
+
+```json
+{
+  "error": true,
+  "message": "Email already exists",
+  "code": 400
+}
+```
+
+---
+
+## Stop Docker
+
+```bash
+# Stop services
+docker-compose down
+
+# Stop dan hapus database
+docker-compose down -v
+```

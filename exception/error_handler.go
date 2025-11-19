@@ -15,7 +15,6 @@ func (e *AppError) Error() string {
 	return e.Message
 }
 
-// Predefined errors
 var (
 	ErrNotFound     = &AppError{Code: http.StatusNotFound, Message: "Employee not found"}
 	ErrBadRequest   = &AppError{Code: http.StatusBadRequest, Message: "Bad request"}
@@ -27,7 +26,6 @@ func NewAppError(code int, message string) *AppError {
 	return &AppError{Code: code, Message: message}
 }
 
-// ErrorHandler middleware
 func ErrorHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {

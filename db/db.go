@@ -25,7 +25,7 @@ func Connect() error {
     name := os.Getenv("DB_NAME")
 
     dsn := fmt.Sprintf(
-        "postgresql://%s:%s@%s:%s/%s",
+        "postgresql://%s:%s@%s:%s/%s?sslmode=disable",
         user, pass, host, port, name,
     )
 

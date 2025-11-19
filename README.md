@@ -65,8 +65,36 @@ src/
 
 ## 🐳 Deploy di Docker
 
-Aplikasi ini dijalankan menggunakan Docker.  
-Buat file `Dockerfile` dan `docker-compose.yml` agar mudah dijalankan.
+Aplikasi ini dijalankan menggunakan Docker dengan arsitektur multi-container:
+
+1. **Database (PostgreSQL)** - Menyimpan data karyawan
+2. **Migration Service** - Menjalankan migrasi database sekali saat startup
+3. **App Service** - Menjalankan REST API dengan hot-reload
+
+### Cara Menjalankan
+
+```bash
+# Build dan jalankan semua services
+docker-compose up --build
+
+# Atau jalankan di background
+docker-compose up -d --build
+
+# Melihat logs
+docker-compose logs -f app
+
+# Stop semua services
+docker-compose down
+
+# Stop dan hapus volumes (reset database)
+docker-compose down -v
+```
+
+### Urutan Startup
+
+1. Database service dimulai dan health check
+2. Migration service menjalankan migrasi database
+3. App service dimulai setelah migrasi selesai
 
 ---
 

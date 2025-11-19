@@ -1,7 +1,7 @@
 package router
 
 import (
-	"juke-test-restapi/controller"
+	controller "juke-test-restapi/controllers"
 	"juke-test-restapi/exception"
 
 	"github.com/gin-gonic/gin"
